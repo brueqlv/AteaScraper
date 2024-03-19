@@ -6,7 +6,6 @@ using Azure.Data.Tables;
 using Azure.Storage.Blobs;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
-using Refit;
 
 namespace AteaScraper
 {
@@ -15,8 +14,11 @@ namespace AteaScraper
         [FunctionName("Function1")]
         public async Task Run([TimerTrigger("0 */1 * * * *")]TimerInfo myTimer, ILogger log)
         {
-            var publicApi = RestService.For<IPublicApi>("https://api.publicapis.org");
-            var result = await publicApi.GetRandomData();
+            var client = new HttpClient();
+            using HttpResponseMessage response = await client.GetAsync("https://api.publicapis.org/random?auth=null");
+            response.EnsureSuccessStatusCode();
+            var responseStream = await response.Content.ReadAsStreamAsync();
+
 
             var serviceClient = new TableServiceClient("UseDevelopmentStorage=true");
             var table = serviceClient.GetTableClient("atea");
