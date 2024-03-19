@@ -1,11 +1,10 @@
 using System;
-using System.IO;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Azure.Data.Tables;
 using Azure.Storage.Blobs;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
+using Refit;
 
 namespace AteaScraper
 {
@@ -14,11 +13,8 @@ namespace AteaScraper
         [FunctionName("Function1")]
         public async Task Run([TimerTrigger("0 */1 * * * *")]TimerInfo myTimer, ILogger log)
         {
-            var client = new HttpClient();
-            using HttpResponseMessage response = await client.GetAsync("https://api.publicapis.org/random?auth=null");
-            response.EnsureSuccessStatusCode();
-            var responseStream = await response.Content.ReadAsStreamAsync();
-
+            var randomApi = RestService.For<IPublicApi>("https://api.publicapis.org");
+            var responseStream = await randomApi.GetRandomData();
 
             var serviceClient = new TableServiceClient("UseDevelopmentStorage=true");
             var table = serviceClient.GetTableClient("atea");
@@ -33,7 +29,7 @@ namespace AteaScraper
                 },
                 {
                     "Status",
-                    result.IsSuccessStatusCode
+                    responseStream.IsSuccessStatusCode
                 }
             };
 
@@ -46,7 +42,7 @@ namespace AteaScraper
             await blobClient.CreateIfNotExistsAsync();
 
             var blob = blobClient.GetBlobClient($"{key}.json");
-            await blob.UploadAsync(result.Content);
+            await blob.UploadAsync(responseStream.Content);
 
             log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
         }

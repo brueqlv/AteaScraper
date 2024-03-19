@@ -1,11 +1,12 @@
-﻿//using Refit;
-//using System.Threading.Tasks;
+﻿using System.IO;
+using Refit;
+using System.Threading.Tasks;
 
-//namespace AteaScraper
-//{
-//    public interface IPublicApi
-//    {
-//        [Get("/random?auth=null")]
-//        Task<string> GetRandomData();
-//    }
-//}
+namespace AteaScraper
+{
+    public interface IPublicApi
+    {
+        [Get("/random?auth=null")]
+        Task<IApiResponse<Stream>> GetRandomData();
+    }
+}
