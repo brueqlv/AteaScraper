@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using AteaScraper.Services;
 using Azure.Data.Tables;
 using Azure.Storage.Blobs;
 using Microsoft.Azure.WebJobs;
@@ -10,11 +11,17 @@ namespace AteaScraper
 {
     public class Function1
     {
+        private readonly RandomApiService _randomApiService;
+
+        public Function1( RandomApiService randomApiService)
+        {
+            _randomApiService = randomApiService;
+        }
+
         [FunctionName("Function1")]
         public async Task Run([TimerTrigger("0 */1 * * * *")]TimerInfo myTimer, ILogger log)
         {
-            var randomApi = RestService.For<IPublicApi>("https://api.publicapis.org");
-            var responseStream = await randomApi.GetRandomData();
+            var responseStream = await _randomApiService.GetRandomData();
 
             var serviceClient = new TableServiceClient("UseDevelopmentStorage=true");
             var table = serviceClient.GetTableClient("atea");
