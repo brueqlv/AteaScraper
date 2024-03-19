@@ -15,11 +15,6 @@ namespace AteaScraper
         [FunctionName("Function1")]
         public async Task Run([TimerTrigger("0 */1 * * * *")]TimerInfo myTimer, ILogger log)
         {
-            var client = new HttpClient();
-            using HttpResponseMessage response = await client.GetAsync("https://api.publicapis.org/random?auth=null");
-            response.EnsureSuccessStatusCode();
-            var responseStream = await response.Content.ReadAsStreamAsync();
-
             var publicApi = RestService.For<IPublicApi>("https://api.publicapis.org");
             var result = await publicApi.GetRandomData();
 
@@ -36,7 +31,7 @@ namespace AteaScraper
                 },
                 {
                     "Status",
-                    response.IsSuccessStatusCode
+                    result.IsSuccessStatusCode
                 }
             };
 
@@ -49,7 +44,7 @@ namespace AteaScraper
             await blobClient.CreateIfNotExistsAsync();
 
             var blob = blobClient.GetBlobClient($"{key}.json");
-            await blob.UploadAsync(responseStream);
+            await blob.UploadAsync(result.Content);
 
             log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
         }
