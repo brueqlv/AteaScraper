@@ -2,7 +2,7 @@
 using Refit;
 using System.Threading.Tasks;
 
-namespace AteaScraper.Services
+namespace AteaScraper.Interfaces
 {
     public interface IPublicApi
     {
