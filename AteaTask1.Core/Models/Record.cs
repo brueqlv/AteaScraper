@@ -1,8 +1,7 @@
 ﻿using Azure;
 using Azure.Data.Tables;
-using System;
 
-namespace AteaScraper.Models
+namespace AteaTask1.Core.Models
 {
     public class Record : ITableEntity
     {

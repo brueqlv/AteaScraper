@@ -1,9 +1,7 @@
-﻿using AteaScraper.Interfaces;
-using Azure.Storage.Blobs;
-using System.IO;
-using System.Threading.Tasks;
+﻿using Azure.Storage.Blobs;
+using AteaTask1.Core.Interfaces;
 
-namespace AteaScraper.Services
+namespace AteaTask1.Service.Services
 {
     public class BlobStorageService : IBlobStorageService
     {
@@ -22,7 +20,7 @@ namespace AteaScraper.Services
             await blob.UploadAsync(content);
         }
 
-        public async Task<string> GetBlob(string blobName)
+        public async Task<string?> GetBlob(string blobName)
         {
             var blob = _blobContainerClient.GetBlobClient($"{blobName}.json");
 

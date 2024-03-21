@@ -1,25 +1,25 @@
 using System;
 using System.Threading.Tasks;
-using AteaScraper.Interfaces;
+using AteaTask1.Core.Interfaces;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 
-namespace AteaScraper
+namespace AteaTask1.Api
 {
-    public class Function1
+    public class StoreData
     {
         private readonly IPublicApi _publicApi;
         private readonly ITableStorageService _tableStorageService;
         private readonly IBlobStorageService _blobStorageService;
 
-        public Function1(IPublicApi publicApi, ITableStorageService tableStorageService, IBlobStorageService blobStorageService)
+        public StoreData(IPublicApi publicApi, ITableStorageService tableStorageService, IBlobStorageService blobStorageService)
         {
             _publicApi = publicApi;
             _tableStorageService = tableStorageService;
             _blobStorageService = blobStorageService;
         }
 
-        [FunctionName("Function1")]
+        [FunctionName("StoreData")]
         public async Task Run([TimerTrigger("0 */1 * * * *")]TimerInfo myTimer, ILogger log)
         {
             var responseStream = await _publicApi.GetRandomData();

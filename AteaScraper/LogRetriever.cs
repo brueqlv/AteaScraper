@@ -1,24 +1,24 @@
 using System;
 using System.Threading.Tasks;
+using AteaTask1.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using AteaScraper.Interfaces;
 
-namespace AteaScraper
+namespace AteaTask1.Api
 {
-    public class Logs
+    public class LogRetriever
     {
         private readonly ITableStorageService _tableStorageService;
 
-        public Logs(ITableStorageService tableStorageService)
+        public LogRetriever(ITableStorageService tableStorageService)
         {
             _tableStorageService = tableStorageService;
         }
 
-        [FunctionName("Logs")]
+        [FunctionName("GetLogsBetweenDates")]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req,
             ILogger log)

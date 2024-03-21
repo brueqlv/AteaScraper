@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <AzureFunctionsVersion>v4</AzureFunctionsVersion>
@@ -12,6 +12,10 @@
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="4.3.0" />
     <PackageReference Include="Refit" Version="6.3.2" />
     <PackageReference Include="Refit.HttpClientFactory" Version="6.3.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AteaTask1.Core\AteaTask1.Core.csproj" />
+    <ProjectReference Include="..\AteaTask1.Service\AteaTask1.Service.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="host.json">

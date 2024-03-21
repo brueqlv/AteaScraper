@@ -1,8 +1,6 @@
-﻿using System.IO;
-using Refit;
-using System.Threading.Tasks;
+﻿using Refit;
 
-namespace AteaScraper.Interfaces
+namespace AteaTask1.Core.Interfaces
 {
     public interface IPublicApi
     {

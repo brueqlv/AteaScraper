@@ -1,14 +1,12 @@
-﻿using System;
-using System.Threading.Tasks;
-using AteaScraper.Interfaces;
-using AteaScraper.Models;
+﻿using AteaTask1.Core.Interfaces;
+using AteaTask1.Core.Models;
 using Azure;
 using Azure.Data.Tables;
 using Microsoft.WindowsAzure.Storage.Table;
 
-namespace AteaScraper.Services
+namespace AteaTask1.Service.Services
 {
-    internal class TableStorageService : ITableStorageService
+    public class TableStorageService : ITableStorageService
     {
         private readonly TableClient _tableClient;
 

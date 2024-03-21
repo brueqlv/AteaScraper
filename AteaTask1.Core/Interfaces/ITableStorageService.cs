@@ -1,10 +1,7 @@
 ﻿using Azure;
-using System;
-using System.Threading.Tasks;
-using AteaScraper.Models;
-using Azure.Data.Tables;
+using AteaTask1.Core.Models;
 
-namespace AteaScraper.Interfaces
+namespace AteaTask1.Core.Interfaces
 {
     public interface ITableStorageService
     {

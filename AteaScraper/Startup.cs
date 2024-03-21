@@ -1,26 +1,28 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
-using AteaScraper.Services;
+using AteaTask1.Core.Configuration;
+using AteaTask1.Core.Interfaces;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Refit;
 using Azure.Data.Tables;
 using Azure.Storage.Blobs;
-using AteaScraper.Interfaces;
+using AteaTask1.Service.Services;
 
-[assembly: FunctionsStartup(typeof(AteaScraper.StartUp))]
+[assembly: FunctionsStartup(typeof(AteaTask1.Api.StartUp))]
 
-namespace AteaScraper
+namespace AteaTask1.Api
 {
     public class StartUp : FunctionsStartup
     {
         public override void Configure(IFunctionsHostBuilder builder)
         {
-            var connectionString = "UseDevelopmentStorage=true"; //Need to move this to configuration
-            var containerName = "atea";
-            var tableName = "atea";
+            builder.Services.AddSingleton<IStorageConfiguration, StorageConfiguration>();
 
-            builder.Services.AddSingleton<TableClient>(serviceProvider => new TableClient(connectionString, tableName));
-            builder.Services.AddSingleton<BlobContainerClient>(serviceProvider => new BlobContainerClient(connectionString, containerName));
+            var storageConfiguration = new StorageConfiguration();
+            var connectionString = storageConfiguration.ConnectionString;
+
+            builder.Services.AddSingleton<TableClient>(serviceProvider => new TableClient(connectionString, storageConfiguration.TableName));
+            builder.Services.AddSingleton<BlobContainerClient>(serviceProvider => new BlobContainerClient(connectionString, storageConfiguration.BlobContainerName));
 
             builder.Services.AddSingleton<ITableStorageService, TableStorageService>();
             builder.Services.AddSingleton<IBlobStorageService, BlobStorageService>();
