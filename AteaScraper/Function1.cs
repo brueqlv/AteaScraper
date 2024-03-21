@@ -23,10 +23,10 @@ namespace AteaScraper
         public async Task Run([TimerTrigger("0 */1 * * * *")]TimerInfo myTimer, ILogger log)
         {
             var responseStream = await _publicApi.GetRandomData();
-            var key = Guid.NewGuid();
+            var key = Guid.NewGuid().ToString();
 
-            await _tableStorageService.AddRequestAsync(key.ToString(), responseStream.IsSuccessStatusCode);
-            await _blobStorageService.UploadJsonAsync(key.ToString(), responseStream.Content);
+            await _tableStorageService.AddRecordAsync(key, responseStream.IsSuccessStatusCode);
+            await _blobStorageService.UploadJsonAsync(key, responseStream.Content);
 
             log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
         }

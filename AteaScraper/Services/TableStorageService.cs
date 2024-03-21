@@ -1,41 +1,38 @@
 ﻿using System;
 using System.Threading.Tasks;
 using AteaScraper.Interfaces;
+using AteaScraper.Models;
 using Azure;
 using Azure.Data.Tables;
 using Microsoft.WindowsAzure.Storage.Table;
-using TableEntity = Azure.Data.Tables.TableEntity;
 
 namespace AteaScraper.Services
 {
     internal class TableStorageService : ITableStorageService
     {
-        private readonly TableServiceClient _tableServiceClient;
+        private readonly TableClient _tableClient;
 
-        public TableStorageService(TableServiceClient tableServiceClient)
+        public TableStorageService(TableClient tableClient)
         {
-            _tableServiceClient = tableServiceClient;
+            _tableClient = tableClient;
         }
 
-        public async Task AddRequestAsync(string key, bool isSuccess)
+        public async Task AddRecordAsync(string key, bool isSuccess)
         {
-            var table = _tableServiceClient.GetTableClient("atea");
-            await table.CreateIfNotExistsAsync();
+            await _tableClient.CreateIfNotExistsAsync();
 
-            var tableEntity = new TableEntity("Request", Guid.NewGuid().ToString())
+            var record = new Record()
             {
-                { "Request", key },
-                { "Status", isSuccess }
+                RowKey = key,
+                PartitionKey = Guid.NewGuid().ToString(),
+                WasSuccessful = isSuccess
             };
 
-            await table.AddEntityAsync(tableEntity);
+            await _tableClient.AddEntityAsync(record);
         }
 
-        public async Task<Pageable<TableEntity>> GetLogsFromToAsync(DateTime from, DateTime to)
+        public async Task<Pageable<Record>> GetLogsFromToAsync(DateTime from, DateTime to)
         {
-            var table = _tableServiceClient.GetTableClient("atea");
-            await table.CreateIfNotExistsAsync();
-
             var fromCondition =
                 TableQuery.GenerateFilterConditionForDate("Timestamp", QueryComparisons.GreaterThanOrEqual, from);
             var toCondition =
@@ -43,7 +40,7 @@ namespace AteaScraper.Services
 
             var filter = TableQuery.CombineFilters(fromCondition, TableOperators.And, toCondition);
 
-            var result = table.Query<TableEntity>(filter);
+            var result = _tableClient.Query<Record>(filter);
 
             return result;
         }

@@ -15,10 +15,11 @@ namespace AteaScraper
     {
         public override void Configure(IFunctionsHostBuilder builder)
         {
-            var connectionString = "UseDevelopmentStorage=true";
+            var connectionString = "UseDevelopmentStorage=true"; //Need to move this to configuration
             var containerName = "atea";
+            var tableName = "atea";
 
-            builder.Services.AddSingleton<TableServiceClient>(serviceProvider => new TableServiceClient(connectionString));
+            builder.Services.AddSingleton<TableClient>(serviceProvider => new TableClient(connectionString, tableName));
             builder.Services.AddSingleton<BlobContainerClient>(serviceProvider => new BlobContainerClient(connectionString, containerName));
 
             builder.Services.AddSingleton<ITableStorageService, TableStorageService>();
