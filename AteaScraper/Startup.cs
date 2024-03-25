@@ -18,7 +18,8 @@ namespace AteaTask1.Api
         {
             builder.Services.AddSingleton<IStorageConfiguration, StorageConfiguration>();
 
-            var storageConfiguration = new StorageConfiguration();
+            var sProvider = builder.Services.BuildServiceProvider();
+            var storageConfiguration = sProvider.GetRequiredService<IStorageConfiguration>();
             var connectionString = storageConfiguration.ConnectionString;
 
             builder.Services.AddSingleton<TableClient>(serviceProvider => new TableClient(connectionString, storageConfiguration.TableName));

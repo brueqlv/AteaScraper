@@ -3,6 +3,6 @@
     public interface IBlobStorageService
     {
         Task UploadJsonAsync(string key, Stream content);
-        Task<string?> GetBlob(string blobName);
+        Task<string?> GetJsonContentAsync(string blobName);
     }
 }

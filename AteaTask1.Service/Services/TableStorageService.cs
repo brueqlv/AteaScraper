@@ -29,7 +29,7 @@ namespace AteaTask1.Service.Services
             await _tableClient.AddEntityAsync(record);
         }
 
-        public Pageable<Record> GetLogsFromTo(DateTime from, DateTime to)
+        public Pageable<Record> GetLogsAsync(DateTime from, DateTime to)
         {
             var fromCondition =
                 TableQuery.GenerateFilterConditionForDate("Timestamp", QueryComparisons.GreaterThanOrEqual, from);

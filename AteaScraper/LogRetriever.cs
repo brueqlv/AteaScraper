@@ -33,11 +33,11 @@ namespace AteaTask1.Api
 
             log.LogInformation($"Received {req.Method} request for logs between {from} and {to}");
 
-            var result = _tableStorageService.GetLogsFromTo(from, to);
+            var logs = _tableStorageService.GetLogsAsync(from, to);
 
-            log.LogInformation($"Retrieved {result.AsPages().Count()} logs between {from} and {to}");
+            log.LogInformation($"Retrieved {logs.AsPages().Count()} logs between {from} and {to}");
 
-            return new OkObjectResult(result);
+            return new OkObjectResult(logs);
         }
     }
 }

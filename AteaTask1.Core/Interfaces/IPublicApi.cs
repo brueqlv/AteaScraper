@@ -4,7 +4,7 @@ namespace AteaTask1.Core.Interfaces
 {
     public interface IPublicApi
     {
-        [Get("/random?auth=null")]
-        Task<IApiResponse<Stream>> GetRandomData();
+        [Get("/random")]
+        Task<IApiResponse<Stream>> GetRandomData([Query("auth")] string? auth = null);
     }
 }

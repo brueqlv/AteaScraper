@@ -20,7 +20,7 @@ namespace AteaTask1.Service.Services
             await blob.UploadAsync(content);
         }
 
-        public async Task<string?> GetBlob(string blobName)
+        public async Task<string?> GetJsonContentAsync(string blobName)
         {
             var blob = _blobContainerClient.GetBlobClient($"{blobName}.json");
 

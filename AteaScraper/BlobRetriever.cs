@@ -26,16 +26,16 @@ namespace AteaTask1.Api
 
             log.LogInformation($"Received {req.Method} request for blob: {blobName}");
 
-            var result = await _blobStorageService.GetBlob(blobName);
+            var jsonBlob = await _blobStorageService.GetJsonContentAsync(blobName);
 
-            if (result == null)
+            if (jsonBlob == null)
             {
                 log.LogInformation($"Blob '{blobName}' not found.");
                 return new NotFoundResult();
             }
 
             log.LogInformation($"Blob '{blobName}' retrieved successfully.");
-            return new OkObjectResult(result);
+            return new OkObjectResult(jsonBlob);
         }
     }
 }
