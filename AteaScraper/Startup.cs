@@ -1,12 +1,12 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
-using AteaTask1.Core.Configuration;
 using AteaTask1.Core.Interfaces;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Refit;
 using Azure.Data.Tables;
 using Azure.Storage.Blobs;
 using AteaTask1.Service.Services;
+using AteaTask1.Api.Configuration;
 
 [assembly: FunctionsStartup(typeof(AteaTask1.Api.StartUp))]
 
@@ -28,7 +28,7 @@ namespace AteaTask1.Api
             builder.Services.AddSingleton<IBlobStorageService, BlobStorageService>();
 
             builder.Services.AddRefitClient<IPublicApi>()
-                .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://api.publicapis.org"));
+                .ConfigureHttpClient(c => c.BaseAddress = new Uri(storageConfiguration.ApiEndpoint));
         }
     }
 }

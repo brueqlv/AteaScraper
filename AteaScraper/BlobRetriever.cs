@@ -22,16 +22,19 @@ namespace AteaTask1.Api
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req,
             ILogger log)
         {
-            log.LogInformation("C# HTTP trigger function processed a request.");
-
             var blobName = req.Query["blob"];
+
+            log.LogInformation($"Received {req.Method} request for blob: {blobName}");
+
             var result = await _blobStorageService.GetBlob(blobName);
 
             if (result == null)
             {
+                log.LogInformation($"Blob '{blobName}' not found.");
                 return new NotFoundResult();
             }
 
+            log.LogInformation($"Blob '{blobName}' retrieved successfully.");
             return new OkObjectResult(result);
         }
     }

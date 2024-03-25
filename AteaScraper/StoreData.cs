@@ -22,13 +22,19 @@ namespace AteaTask1.Api
         [FunctionName("StoreData")]
         public async Task Run([TimerTrigger("0 */1 * * * *")]TimerInfo myTimer, ILogger log)
         {
+            log.LogInformation($"C# Timer trigger function started execution at: {DateTime.Now}");
+            log.LogInformation("Retrieving random data from the public API...");
+
             var responseStream = await _publicApi.GetRandomData();
             var key = Guid.NewGuid().ToString();
 
+            log.LogInformation("Storing data in table storage...");
             await _tableStorageService.AddRecordAsync(key, responseStream.IsSuccessStatusCode);
+
+            log.LogInformation("Storing data in blob storage...");
             await _blobStorageService.UploadJsonAsync(key, responseStream.Content);
 
-            log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
+            log.LogInformation($"C# Timer trigger function executed successfully at: {DateTime.Now}");
         }
     }
 }

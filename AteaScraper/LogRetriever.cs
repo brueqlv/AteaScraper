@@ -6,6 +6,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using System.Linq;
 
 namespace AteaTask1.Api
 {
@@ -23,22 +24,19 @@ namespace AteaTask1.Api
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req,
             ILogger log)
         {
-            log.LogInformation("C# HTTP trigger function processed a request.");
-
-            if (!DateTime.TryParse(req.Query["from"], out var from))
+            if (!DateTime.TryParse(req.Query["from"], out var from) 
+                || !DateTime.TryParse(req.Query["to"], out var to))
             {
+                log.LogWarning("Invalid date format in request. Expected format: YYYY-MM-DDTHH:MM:SS");
                 return new BadRequestResult();
             }
 
-            if (!DateTime.TryParse(req.Query["to"], out var to))
-            {
-                return new BadRequestResult();
-            }
+            log.LogInformation($"Received {req.Method} request for logs between {from} and {to}");
 
-            var result = _tableStorageService.GetLogsFromToAsync(from, to).Result;
+            var result = _tableStorageService.GetLogsFromTo(from, to);
 
-            log.LogInformation("This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.");
-                
+            log.LogInformation($"Retrieved {result.AsPages().Count()} logs between {from} and {to}");
+
             return new OkObjectResult(result);
         }
     }
